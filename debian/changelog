@@ -1,3 +1,15 @@
+openmediavault (2.1.16) stable; urgency=low
+
+  * Improve UI framework.
+
+ -- Volker Theile <volker.theile@openmediavault.org>  Thu, 17 Sep 2015 22:05:00 +0200
+
+openmediavault (2.1.15) stable; urgency=low
+
+  * Mantis 0001395: FTP "Permit root login" does not work as expected.
+
+ -- Volker Theile <volker.theile@openmediavault.org>  Wed, 16 Sep 2015 12:00:36 +0200
+
 openmediavault (2.1.14) stable; urgency=low
 
   * Improve UI framework.
