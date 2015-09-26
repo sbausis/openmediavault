@@ -275,6 +275,8 @@ class OMVControlPanel extends OMVHtmlPageAbstract {
 		$this->scanFiles("js/omv/workspace/Workspace.js", $incList);
 		$this->scanDir("js/omv/module/public", $incList, TRUE);
 		$this->scanDir("js/omv/module/{$this->mode}", $incList, TRUE);
+		$this->scanDir("js/omv/module_override/public", $incList, TRUE);
+		$this->scanDir("js/omv/module_override/{$this->mode}", $incList, TRUE);
 		return $incList;
 	}
 
