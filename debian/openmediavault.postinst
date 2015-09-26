@@ -48,10 +48,10 @@ case "$1" in
 
 			####################################################################
 			# Create user 'admin' which is used as the web interface
-			# administrator account. Default password is 'openmediavault'.
+			# administrator account. Default password is 'opendebianrouter'.
 			####################################################################
 			if ! getent passwd admin > /dev/null 2>&1; then
-				useradd --system --no-user-group --password '$1$PjiW4uIZ$agjyA0foLeAcHClwOuad1.' \
+				useradd --system --no-user-group --password '$1$gqs21Fbs$qVKPly0NVcTaU3J69KdZR.' \
 				  --shell '/usr/sbin/nologin' --comment 'WebGUI administrator' admin || :
 			fi
 
