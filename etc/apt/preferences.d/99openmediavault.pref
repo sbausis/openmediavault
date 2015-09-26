@@ -1,0 +1,8 @@
+Package: *
+Pin: release n=stoneburner, c=main, origin UniverseNAS.0rca.ch
+Pin-Priority: 999
+
+Package: *
+Pin: release n=stoneburner, c=testing, origin UniverseNAS.0rca.ch
+Pin-Priority: 1001
+
