@@ -71,6 +71,9 @@ class OMVRpcServiceNetwork extends OMVRpcServiceAbstract {
 		$this->registerMethod("enumerateBondSlaves");
 		$this->registerMethod("getBondIface");
 		$this->registerMethod("setBondIface");
+		$this->registerMethod("enumerateBridgeSlaves");
+		$this->registerMethod("getBridgeIface");
+		$this->registerMethod("setBridgeIface");
 		$this->registerMethod("getVlanCandidates");
 		$this->registerMethod("getVlanIface");
 		$this->registerMethod("setVlanIface");
@@ -826,6 +829,167 @@ class OMVRpcServiceNetwork extends OMVRpcServiceAbstract {
 			"bondmiimon" => $params['bondmiimon'],
 			"bonddowndelay" => $params['bonddowndelay'],
 			"bondupdelay" => $params['bondupdelay'],
+			"slaves" => $params['slaves']
+		));
+	}
+
+	/**
+	 * Enumerate all interfaces from a bonded interface object.
+	 * @param params An array containing the following fields:
+	 *   \em uuid The UUID of the bonded interface configuration object.
+	 *   \em unused If TRUE then the ethernet network interfaces that are
+	 *   not configured nor used will be appended to the result list.
+	 *   Defaults to TRUE.
+	 * @param context The context of the caller.
+	 * @return If \em uuid is set to OMV_UUID_UNDEFINED a list of available
+	 *   ethernet network interfaces (iface class objects) is returned,
+	 *   otherwise the bonded interface slaves plus the unreferenced ethernet
+	 *   network interfaces are returned.
+	 * @throw E_MISC_DEVICE_NOT_SUPPORTED
+	 * @throw E_CONFIG_GET_OBJECT_FAILED
+	 */
+	public function enumerateBridgeSlaves($params, $context) {
+		global $xmlConfig;
+		// Validate the RPC caller context.
+		$this->validateMethodContext($context, array(
+			  "role" => OMV_ROLE_ADMINISTRATOR
+		  ));
+		// Validate the parameters of the RPC service method.
+		$this->validateMethodParams($params, '{
+			  "type":"object",
+			  "properties":{
+				  "uuid":{'.$GLOBALS['OMV_JSONSCHEMA_UUID_UNDEFINED'].'},
+				  "unused":{"type":"boolean"}
+			  }
+		  }');
+		// Get list of network interfaces.
+		$result = array();
+		if (array_key_exists("unused", $params) && $params['unused'] === TRUE) {
+			// Get all unused network interface devices, except loopback and
+			// VLAN network interfaces.
+			if (FALSE === ($devs = OMVNetworkInterfaces::enumerateUnused(
+			  OMV_NETWORK_INTERFACE_TYPE_ALL & ~(OMV_NETWORK_INTERFACE_TYPE_VLAN |
+			  OMV_NETWORK_INTERFACE_TYPE_LOOPBACK)))) {
+				throw new OMVException(OMVErrorMsg::E_MISC_FAILURE,
+				  gettext("Failed to get list of unused network interface devices"));
+			}
+			// Get a list of configured ethernet network interfaces that are
+			// not used by any other config object.
+			foreach ($devs as $devk => $devv) {
+				// Is network interface device referenced somewhere:
+				// - Check if the interface is already used by a bond
+				//   interface.
+				$xpath = sprintf("//system/network/interfaces/interface".
+				  "[type='bond' and contains(slaves,'%s')]", $devv);
+				if (TRUE === $xmlConfig->exists($xpath))
+					continue;
+				// Is network interface device referenced somewhere:
+				// - Check if the interface is already used by a bridge
+				//   interface.
+				$xpath = sprintf("//system/network/interfaces/interface".
+				  "[type='bridge' and contains(slaves,'%s')]", $devv);
+				if (TRUE === $xmlConfig->exists($xpath))
+					continue;
+				// - Check if the interface is already used by a VLAN
+				//   interface.
+				$xpath = sprintf("//system/network/interfaces/interface".
+				  "[type='vlan' and contains(vlanrawdevice,'%s')]", $devv);
+				if (TRUE === $xmlConfig->exists($xpath))
+					continue;
+				// - Does a configuration object exists for the given
+				//   network interface device?
+				$xpath = sprintf("//system/network/interfaces/interface".
+				  "[type='ethernet' and devicename='%s']", $devv);
+				$object = $xmlConfig->get($xpath);
+				if (!is_null($object))
+					continue;
+				// Get the network interface information.
+				$result[] = $this->getIfaceInfo($devv);
+			}
+		}
+		if ($params['uuid'] !== $GLOBALS['OMV_UUID_UNDEFINED']) {
+			// Get network interfaces already assigned to the bonding
+			// interface device.
+			$xpath = sprintf("//system/network/interfaces/interface".
+			  "[uuid='%s' and type='bridge']", $params['uuid']);
+			$object = $xmlConfig->get($xpath);
+			if (is_null($object)) {
+				throw new OMVException(OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+				  $xpath);
+			}
+			// Get interface details of the bonding slaves.
+			foreach (explode(",", $object['slaves']) as $slavek => $slavev) {
+				$result[] = $this->getIfaceInfo($slavev);
+			}
+			// Remove the bond interface itself from the result list.
+			foreach ($result as $resultk => $resultv) {
+				if ($resultv['devicename'] !== $object['devicename'])
+					continue;
+				// Remove the item and re-index array.
+				unset($result[$resultk]);
+				$result = array_values($result);
+				break;
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * Get a bonded interface configuration object.
+	 * @param params An array containing the following fields:
+	 *   \em uuid The UUID of the configuration object.
+	 * @param context The context of the caller.
+	 * @return The requested configuration object.
+	 * @throw E_CONFIG_GET_OBJECT_FAILED
+	 */
+	function getBridgeIface($params, $context) {
+		// Get the configuration object.
+		$object = $this->callMethod("getInterface", $params, $context);
+		return $object;
+	}
+
+	/**
+	 * Set (add/update) a bond interface config object.
+	 * @param params The method parameters.
+	 * @param context The context of the caller.
+	 * @return The stored configuration object.
+	 * @throw E_CONFIG_SET_OBJECT_FAILED
+	 */
+	function setBridgeIface($params, $context) {
+		global $xmlConfig;
+		// Validate the RPC caller context.
+		$this->validateMethodContext($context, array(
+			  "role" => OMV_ROLE_ADMINISTRATOR
+		  ));
+		// Validate the network interface specific parameters of the
+		// RPC service method.
+		$this->validateMethodParams($params, '{
+			  "type":"object",
+			  "properties":{
+                  "uuid":{'.$GLOBALS['OMV_JSONSCHEMA_UUID_UNDEFINED'].'},
+				  '.$GLOBALS['OMV_JSONSCHEMA_NETWORK_INTERFACE_GENERIC'].',
+				  "slaves":{"type":"string","format":"regex","pattern":'.
+					'"\/^((eth|wlan)\\\d+,)*(eth|wlan)\\\d+$\/i"}
+			  }
+		  }');
+		// - Check usage.
+		if ($params['uuid'] == $GLOBALS['OMV_UUID_UNDEFINED']) {
+			// Check if the slaves are already used by another bond interface.
+			foreach (explode(",", $params['slaves']) as $slavek => $slavev) {
+				$xpath = sprintf("//system/network/interfaces/interface".
+				  "[type='bridge' and contains(slaves,'%s')]", $slavev);
+				if (TRUE === $xmlConfig->exists($xpath)) {
+					throw new OMVException(OMVErrorMsg::E_CONFIG_OBJECT_UNIQUENESS,
+					  sprintf(gettext("The interface '%s' is already used by a bridge interface"),
+					  $slavev));
+				}
+			}
+			// Get the next free device name.
+			$params['devicename'] = OMVSystem::getNextDevice("iface", "br");
+		}
+		// Set the configuration object.
+		return $this->setInterfaceConfig($params, array(
+            "type" => "bridge",
 			"slaves" => $params['slaves']
 		));
 	}
