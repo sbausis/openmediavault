@@ -25,7 +25,8 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 OMV_APT_SOURCES_LIST_CONFIG=${OMV_APT_SOURCES_LIST_CONFIG:-"/etc/apt/sources.list.d/openmediavault.list"}
-OMV_APT_REPOSITORY_URL=${OMV_APT_REPOSITORY_URL:-"http://packages.openmediavault.org/public"}
+OMV_APT_REPOSITORY_URL=${OMV_APT_REPOSITORY_URL:-"http://UniverseNAS.0rca.ch/openmediavault"}
+OMV_APT_PARTNER_URL=${OMV_APT_REPOSITORY_URL:-"http://UniverseNAS.0rca.ch/omvextras"}
 
 mkconf() {
 	# Get the distribution name.
@@ -40,16 +41,17 @@ EOF
 	xmlstarlet sel -t -m "//system/apt/distribution" \
 	  -i "proposed = 1" \
 		-o "## Uncomment the following line to add software from the proposed repository." -n \
-		-o "deb ${OMV_APT_REPOSITORY_URL} ${distribution}-proposed main" -n \
-		-o "# deb http://downloads.sourceforge.net/project/openmediavault/packages ${distribution}-proposed main" -n \
+		-o "deb ${OMV_APT_REPOSITORY_URL} ${distribution} testing" -n \
+	  	-o "# deb http://downloads.sourceforge.net/project/openmediavault/packages ${distribution}-proposed main" -n \
 	  -b \
 	  -i "partner = 1" \
 		-o "## This software is not part of OpenMediaVault, but is offered by third-party" -n \
 		-o "## developers as a service to OpenMediaVault users." -n \
-		-o "deb ${OMV_APT_REPOSITORY_URL} ${distribution} partner" -n \
-		-o "# deb http://downloads.sourceforge.net/project/openmediavault/packages ${distribution} partner" -n \
+		-o "deb ${OMV_APT_PARTNER_URL} ${distribution} main" -n \
+	  	-o "# deb http://downloads.sourceforge.net/project/openmediavault/packages ${distribution} partner" -n \
 	  -b \
 	  ${OMV_CONFIG_FILE} | xmlstarlet unesc >> ${OMV_APT_SOURCES_LIST_CONFIG}
+	
 }
 
 case "$1" in
