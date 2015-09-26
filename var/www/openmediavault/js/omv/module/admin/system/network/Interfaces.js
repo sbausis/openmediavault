@@ -616,6 +616,95 @@ Ext.define("OMV.module.admin.system.network.interface.window.Bond", {
 });
 
 /**
+ * @class OMV.module.admin.system.network.interface.window.Bridge
+ * @derived OMV.module.admin.system.network.interface.window.Generic
+ */
+Ext.define("OMV.module.admin.system.network.interface.window.Bridge", {
+	extend: "OMV.module.admin.system.network.interface.window.Generic",
+	uses: [
+		"OMV.form.field.CheckboxGrid"
+	],
+
+	rpcGetMethod: "getBridgeIface",
+	rpcSetMethod: "setBridgeIface",
+
+	getFormSectionConfig: function() {
+		var me = this;
+		var config = me.callParent(arguments);
+		Ext.Array.push(config, {
+			id: "bridge",
+			position: 15,
+			title: _("Bridge"),
+			correlations: []
+		});
+		return config;
+	},
+
+	getFormItemsBySection: function(name) {
+		var me = this;
+		var items = me.callParent(arguments);
+		switch (name) {
+		case "bridge":
+			Ext.Array.push(items, [{
+				xtype: "checkboxgridfield",
+				name: "slaves",
+				fieldLabel: _("Slaves"),
+				height: 105,
+				minSelections: 1,
+				allowBlank: false,
+				valueField: "devicename",
+				useStringValue: true,
+				store: Ext.create("OMV.data.Store", {
+					autoLoad: true,
+					model: OMV.data.Model.createImplicit({
+						idProperty: "devicename",
+						fields: [
+							{ name: "devicename", type: "string" },
+							{ name: "ether", type: "string" }
+						]
+					}),
+					proxy: {
+						type: "rpc",
+						rpcData: {
+							service: "Network",
+							method: "enumerateBridgeSlaves"
+						},
+						extraParams: {
+							uuid: me.uuid,
+							unused: true
+						},
+						appendSortParams: false
+					},
+					sorters: [{
+						direction: "ASC",
+						property: "devicename"
+					}]
+				}),
+				gridConfig: {
+					stateful: true,
+					stateId: "0c92444c-a911-11e2-ba78-00221568ca88",
+					columns: [{
+						text: _("Device"),
+						sortable: true,
+						dataIndex: "devicename",
+						stateId: "devicename",
+						flex: 1
+					},{
+						text: _("MAC address"),
+						sortable: true,
+						dataIndex: "ether",
+						stateId: "ether",
+						flex: 1
+					}]
+				}
+			}]);
+			break;
+		}
+		return items;
+	},
+});
+
+/**
  * @class OMV.module.admin.system.network.interface.window.Vlan
  * @derived OMV.module.admin.system.network.interface.window.Generic
  */
