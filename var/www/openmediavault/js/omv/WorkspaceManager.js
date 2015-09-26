@@ -97,8 +97,9 @@ Ext.define("OMV.WorkspaceManager", {
 		config = Ext.apply({
 			position: 100
 		}, config);
+		config = me.getOverride(config); if(!config) return null;
 		// Extract path nodes.
-		var parts = me.explodeNodePath(config.path)
+		var parts = me.explodeNodePath(config.path);
 		var parent = me.getRootNode();
 		// Walk down the node path. Create non-existing nodes during this
 		// process. Normally these nodes will be reconfigured later.
@@ -148,6 +149,7 @@ Ext.define("OMV.WorkspaceManager", {
 		config = Ext.apply({
 			position: 100
 		}, config);
+		config = me.getOverride(config); if(!config) return null;
 		// Check if the given class exists.
 		if(!Ext.ClassManager.isCreated(config.className)) {
 			Ext.Error.raise(Ext.String.format("Failed to register " +
@@ -183,6 +185,55 @@ Ext.define("OMV.WorkspaceManager", {
 		return node;
 	},
 
+	registerOverrides: function(overrides) {
+		var me = this;
+		if (overrides) {
+			if (!me.overrides) {
+				me.overrides = overrides;
+			}
+			else {
+				me.overrides = me.overrides.concat(overrides);
+			}
+		}
+	},
+
+	registerNodeOverride: function(config) {
+		var me = this;
+		me.registerOverrides([config]);
+	},
+
+	registerPanelOverride: function(config) {
+		var me = this;
+		me.registerOverrides([config]);
+	},
+
+	getOverride: function(config) {
+		var me = this;
+		var result = config;
+		var overrides = me.overrides;
+		if (overrides) {
+			for (var i=0; i < overrides.length; i++) {
+				if (result.id == overrides[i].id) {
+					if (result.path == overrides[i].path) {
+						if (!overrides[i].del) {
+							if (overrides[i].newpath) result.path = overrides[i].newpath;
+							if (overrides[i].position) result.position = overrides[i].position;
+							if (overrides[i].text) result.text = overrides[i].text;
+							if (overrides[i].icon16) result.icon16 = overrides[i].icon16;
+							if (overrides[i].iconSvg) result.iconSvg = overrides[i].iconSvg;
+							if (overrides[i].className) result.className = overrides[i].className;
+						}
+						else {
+							result = null;
+						}	
+						return result;
+					}
+				}
+			};
+		}
+		return result;
+	},
+	
 	/**
 	 * Gets a node by its path.
 	 * @return The match node or NULL if the node does not exist.
