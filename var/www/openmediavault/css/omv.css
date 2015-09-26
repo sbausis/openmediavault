@@ -23,7 +23,7 @@
 /* Login page                                                                 */
 /******************************************************************************/
 body#login-page {
-	background: #98b7cf;
+	background: #98cfae;
 }
 div#projectlogo {
 	position: absolute;
@@ -43,7 +43,7 @@ div#projectlogo {
 /* Shutdown page                                                                 */
 /******************************************************************************/
 body#shutdown-page {
-	background: #98b7cf;
+	background: #98cfae;
 }
 div#shutdownlogo {
 	position: absolute;
@@ -63,13 +63,13 @@ div#shutdownlogo {
 /* Workspace page                                                             */
 /******************************************************************************/
 a {
-	color: #7F9ABE;
+	color: #86be7f;
 }
 div#header {
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	height: 80px;
-	background: #98b7cf; /* #475668, #98b7cf, #3C404B */
+	background: #98cfae; /* #475668, #98b7cf, #3C404B */
 }
 div#headerlogo {
 	float: left;
