@@ -216,6 +216,7 @@ Ext.define("OMV.WorkspaceManager", {
 				if (result.id == overrides[i].id) {
 					if (result.path == overrides[i].path) {
 						if (!overrides[i].del) {
+							if (overrides[i].newid) result.id = overrides[i].newid;
 							if (overrides[i].newpath) result.path = overrides[i].newpath;
 							if (overrides[i].position) result.position = overrides[i].position;
 							if (overrides[i].text) result.text = overrides[i].text;
