@@ -4,7 +4,8 @@
 OMV.WorkspaceManager.registerNodeOverride({
 	newpath: "/diagnostic",
 	id: "notification",
-	path: "/system"
+	path: "/system",
+	position: 11
 });
 
 OMV.WorkspaceManager.registerPanelOverride({
