@@ -8,10 +8,11 @@ OMV.WorkspaceManager.registerNodeOverride({
 });
 
 OMV.WorkspaceManager.registerPanelOverride({
-	newpath: "perfstat",
+	newid: "perfstat",
 	newpath: "/diagnostic/monitoring",
 	id: "perfstats",
-	path: "/system/monitoring"
+	path: "/system/monitoring",
+	position: 10
 });
 
 OMV.WorkspaceManager.registerPanelOverride({
