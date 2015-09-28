@@ -26,7 +26,7 @@ set -e
 
 OMV_APT_SOURCES_LIST_CONFIG=${OMV_APT_SOURCES_LIST_CONFIG:-"/etc/apt/sources.list.d/openmediavault.list"}
 OMV_APT_REPOSITORY_URL=${OMV_APT_REPOSITORY_URL:-"http://UniverseNAS.0rca.ch/openmediavault"}
-OMV_APT_PARTNER_URL=${OMV_APT_REPOSITORY_URL:-"http://UniverseNAS.0rca.ch/omvextras"}
+OMV_APT_PARTNER_URL=${OMV_APT_PARTNER_URL:-"http://UniverseNAS.0rca.ch/omvextras"}
 
 mkconf() {
 	# Get the distribution name.
