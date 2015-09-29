@@ -74,8 +74,8 @@ case "$1" in
 			update-rc.d tftpd-hpa disable &>/dev/null
 			invoke-rc.d --force rsync stop
 			update-rc.d rsync disable &>/dev/null
-			invoke-rc.d --force ssh stop
-			update-rc.d ssh disable &>/dev/null
+			#invoke-rc.d --force ssh stop
+			#update-rc.d ssh disable &>/dev/null
 			invoke-rc.d --force snmpd stop
 			update-rc.d snmpd disable &>/dev/null
 			invoke-rc.d --force proftpd stop
@@ -255,7 +255,7 @@ case "$1" in
 			omv_config_add_element "/config/system" "apt" ""
 			omv_config_add_element "/config/system/apt" "distribution" ""
 			omv_config_add_element "/config/system/apt/distribution" "proposed" "0"
-			omv_config_add_element "/config/system/apt/distribution" "partner" "0"
+			omv_config_add_element "/config/system/apt/distribution" "partner" "1"
 		fi
 		if dpkg --compare-versions "$2" lt-nl "0.5.32"; then
 			omv-mkconf collectd
