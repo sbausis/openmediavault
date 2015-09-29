@@ -74,8 +74,8 @@ case "$1" in
 			update-rc.d tftpd-hpa disable &>/dev/null
 			invoke-rc.d --force rsync stop
 			update-rc.d rsync disable &>/dev/null
-			invoke-rc.d --force ssh stop
-			update-rc.d ssh disable &>/dev/null
+			#invoke-rc.d --force ssh stop
+			#update-rc.d ssh disable &>/dev/null
 			invoke-rc.d --force snmpd stop
 			update-rc.d snmpd disable &>/dev/null
 			invoke-rc.d --force proftpd stop
