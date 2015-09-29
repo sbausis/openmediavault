@@ -974,6 +974,7 @@ Ext.define("OMV.module.admin.system.network.interface.Interfaces", {
 		"OMV.module.admin.system.network.interface.Identify",
 		"OMV.module.admin.system.network.interface.window.Ethernet",
 		"OMV.module.admin.system.network.interface.window.Bond",
+		"OMV.module.admin.system.network.interface.window.Bridge",
 		"OMV.module.admin.system.network.interface.window.Vlan"
 	],
 	uses: [
@@ -1127,6 +1128,7 @@ Ext.define("OMV.module.admin.system.network.interface.Interfaces", {
 					{ text: _("Ethernet"), value: "ethernet" },
 					{ text: _("Wi-Fi"), value: "wireless" },
 					{ text: _("Bond"), value: "bond" },
+					{ text: _("Bridge"), value: "bridge" },
 					{ text: _("VLAN"), value: "vlan" }
 				],
 				listeners: {
@@ -1205,6 +1207,10 @@ Ext.define("OMV.module.admin.system.network.interface.Interfaces", {
 			clsName = "OMV.module.admin.system.network.interface.window.Bond";
 			title = _("Add bond connection");
 			break;
+		case "bridge":
+			clsName = "OMV.module.admin.system.network.interface.window.Bridge";
+			title = _("Add bridge connection");
+			break;
 		case "vlan":
 			clsName = "OMV.module.admin.system.network.interface.window.Vlan";
 			title = _("Add VLAN connection");
@@ -1245,6 +1251,10 @@ Ext.define("OMV.module.admin.system.network.interface.Interfaces", {
 		case "bond":
 			clsName = "OMV.module.admin.system.network.interface.window.Bond";
 			title = _("Edit bond connection");
+			break;
+		case "bridge":
+			clsName = "OMV.module.admin.system.network.interface.window.Bridge";
+			title = _("Edit bridge connection");
 			break;
 		case "vlan":
 			clsName = "OMV.module.admin.system.network.interface.window.Vlan";

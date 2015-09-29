@@ -4,7 +4,8 @@
 OMV.WorkspaceManager.registerNodeOverride({
 	newpath: "/diagnostic",
 	id: "smart",
-	path: "/storage"
+	path: "/storage",
+	position: 14
 });
 
 OMV.WorkspaceManager.registerPanelOverride({

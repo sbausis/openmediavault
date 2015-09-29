@@ -4,7 +4,8 @@
 OMV.WorkspaceManager.registerNodeOverride({
 	newpath: "/diagnostic",
 	id: "powermanagement",
-	path: "/system"
+	path: "/system",
+	position: 15
 });
 
 OMV.WorkspaceManager.registerPanelOverride({

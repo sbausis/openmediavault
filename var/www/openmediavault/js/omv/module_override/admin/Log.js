@@ -2,9 +2,7 @@
 // require("js/omv/WorkspaceManager.js")
 
 OMV.WorkspaceManager.registerNodeOverride({
-	id: "system",
+	id: "log",
 	path: "/diagnostic",
-	icon16: "images/about.png",
-	iconSvg: "images/about.svg",
-	position: 10
+	position: 12
 });
