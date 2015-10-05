@@ -76,6 +76,8 @@ xmlstarlet sel -t \
 		  -v "concat('    pre-up ethtool -s \$IFACE ',options)" -n \
 	  -b \
 	  -v "concat('    bridge_ports ',translate(slaves,',',' '))" -n \
+	  -v "concat('    bridge_fd 5')" -n \
+	  -v "concat('    bridge_stp no')" -n \
 	  -v "concat('iface ',devicename,' inet6 ',method6)" -n \
 	  -i "method6 = 'manual'" \
 		  -o "    pre-down ip -6 addr flush dev \$IFACE" -n \
