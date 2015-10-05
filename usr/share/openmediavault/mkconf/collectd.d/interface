@@ -33,7 +33,7 @@ IFACE=$(xmlstarlet sel -t \
 		-v "concat(devicename,' ')" \
 	-b \
   -b \
-  -m "//system/network/interfaces/interface[type='bond' or type='vlan']" \
+  -m "//system/network/interfaces/interface[type='bond' or type='bridge' or type='vlan']" \
 	-v "concat(devicename,' ')" \
   -b \
   ${OMV_CONFIG_FILE} | xmlstarlet unesc)
