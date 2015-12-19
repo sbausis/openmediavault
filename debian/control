@@ -1,10 +1,10 @@
 Source: openmediavault
 Section: admin
 Priority: optional
-Maintainer: Volker Theile <volker.theile@openmediavault.org>
+Maintainer: Simon Pascal Baur <simonbaur@0rca.ch>
 Build-Depends: debhelper (>> 7), gettext
 Standards-Version: 3.6.10
-Homepage: http://www.openmediavault.org
+Homepage: http://0rca.ch/
 
 Package: openmediavault
 Architecture: all
