@@ -4,7 +4,7 @@
 #
 # @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
 # @author    Volker Theile <volker.theile@openmediavault.org>
-# @copyright Copyright (c) 2009-2015 Volker Theile
+# @copyright Copyright (c) 2009-2013 Volker Theile
 #
 # OpenMediaVault is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,10 +21,6 @@
 
 set -e
 
-. /etc/default/openmediavault
-. /usr/share/openmediavault/scripts/helper-functions
+apt-get --yes --force-yes autoremove
 
-OMV_TIMEZONE_CONFIG=${OMV_TIMEZONE_CONFIG:-"/etc/timezone"}
-
-xmlstarlet sel -t -v "//system/time/timezone" \
-  ${OMV_CONFIG_FILE} | xmlstarlet unesc > ${OMV_TIMEZONE_CONFIG}
+exit 0
